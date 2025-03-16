@@ -6,6 +6,7 @@ const PopupForm = ({ onClose }) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "", // ✅ Added phone field
     friendName: "",
     friendEmail: "",
     referralCode: "",
@@ -22,6 +23,11 @@ const PopupForm = ({ onClose }) => {
     return /\S+@\S+\.\S+/.test(email);
   };
 
+  // Function to validate phone number (basic check)
+  const isValidPhone = (phone) => {
+    return /^\d{10}$/.test(phone); // Accepts 10-digit numbers
+  };
+
   // Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -35,8 +41,14 @@ const PopupForm = ({ onClose }) => {
     setMessage("");
 
     let validationErrors = {};
+    if (!formData.name) {
+      validationErrors.name = "Name is required";
+    }
     if (!isValidEmail(formData.email)) {
       validationErrors.email = "Invalid email format";
+    }
+    if (!isValidPhone(formData.phone)) {
+      validationErrors.phone = "Enter a valid 10-digit phone number";
     }
     if (!isValidEmail(formData.friendEmail)) {
       validationErrors.friendEmail = "Invalid friend's email format";
@@ -49,7 +61,7 @@ const PopupForm = ({ onClose }) => {
 
     setLoading(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/api/referral`, {
+      const response = await fetch(`${API_BASE_URL}/api`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -61,6 +73,7 @@ const PopupForm = ({ onClose }) => {
         setFormData({
           name: "",
           email: "",
+          phone: "", // Reset phone
           friendName: "",
           friendEmail: "",
           referralCode: "",
@@ -93,6 +106,8 @@ const PopupForm = ({ onClose }) => {
             onChange={handleChange}
             required
           />
+          {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
+
           <input
             type="email"
             name="email"
@@ -103,6 +118,17 @@ const PopupForm = ({ onClose }) => {
             required
           />
           {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+
+          <input
+            type="tel"
+            name="phone"
+            placeholder="Your Phone Number"
+            className="w-full border p-2 rounded"
+            value={formData.phone}
+            onChange={handleChange}
+            required
+          />
+          {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
 
           <input
             type="text"
