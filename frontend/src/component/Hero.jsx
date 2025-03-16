@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import hero from "../assets/hero.png";
 import money from "../assets/money.png";
+import PopupForm from "./PopupForm"; // Import the PopupForm component
 
 const Hero = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -31,62 +32,8 @@ const Hero = () => {
         <img src={money} alt="Money" className="absolute bottom-0 left-4 w-16" />
       </div>
 
-      {/* Popup Form */}
-      {isPopupOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-[400px] text-center relative">
-            <h2 className="text-xl font-bold mb-4">Refer a Friend</h2>
-            <p className="text-gray-600 mb-4">Enter details to refer your friend.</p>
-            
-            <input
-              type="text"
-              placeholder=" Name"
-              className="w-full border p-2 rounded mb-3"
-            />
-            <input
-              type="email"
-              placeholder="Your Email"
-              className="w-full border p-2 rounded mb-3"
-            />
-             <input
-              type="text"
-              placeholder="Friend's Name"
-              className="w-full border p-2 rounded mb-3"
-            />
-             <input
-              type="email"
-              placeholder="Friend's Email"
-              className="w-full border p-2 rounded mb-3"
-            />
-             <input
-              type="text"
-              placeholder="Referral code"
-              className="w-full border p-2 rounded mb-3"
-            />
-             <input
-              type="text"
-              placeholder="Course ID"
-              className="w-full border p-2 rounded mb-3"
-            />
-             <input
-              type="text"
-              placeholder="Referral Message"
-              className="w-full border p-2 rounded mb-3"
-            />
-            <button className="bg-blue-600 text-white px-4 py-2 rounded w-full hover:bg-blue-700">
-              Submit
-            </button>
-
-            {/* Close Button */}
-            <button
-              onClick={() => setIsPopupOpen(false)}
-              className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
-            >
-              ✖
-            </button>
-          </div>
-        </div>
-      )}
+      {/* Show Popup if Open */}
+      {isPopupOpen && <PopupForm onClose={() => setIsPopupOpen(false)} />}
     </div>
   );
 };

@@ -1,6 +1,9 @@
-import React from "react";
+import React, {useState}from "react";
+import PopupForm from "./PopupForm";
 
 const ReferralBenefits = () => {
+     const [isPopupOpen, setIsPopupOpen] = useState(false);
+
   return (
     <div className="flex flex-col items-center p-6 bg-white-100 min-h-screen">
       {/* Header */}
@@ -71,9 +74,10 @@ const ReferralBenefits = () => {
       </div>
 
       {/* Call to Action */}
-      <button className="mt-6 bg-blue-500 text-white py-2 px-6 rounded-lg text-lg shadow-md">
+      <button className="mt-6 bg-blue-500 text-white py-2 px-6 rounded-lg text-lg shadow-md" onClick={() => setIsPopupOpen(true)}>
         Refer Now
       </button>
+      {isPopupOpen && <PopupForm onClose={() => setIsPopupOpen(false)} />}
     </div>
   );
 };

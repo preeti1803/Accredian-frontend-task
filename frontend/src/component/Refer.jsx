@@ -1,7 +1,12 @@
 
-import React from "react";
+import React, { useState } from "react";
 import refer from "../assets/middle.png";
+import  PopupForm  from "../component/PopupForm";
+
 export  function Refer() {
+   
+    const [isPopupOpen,setIsPopupOpen] = useState('false')
+    
     return (
       <div className="bg-[#EAF1FF] py-9 px-4 md:px-10 text-center mt-20">
         {/* Title */}
@@ -15,9 +20,10 @@ export  function Refer() {
             </div>
     
         
-        <button className="bg-blue-500 text-white px-6 py-3 mt-8 rounded-md shadow-md hover:bg-blue-600">
+        <button className="bg-blue-500 text-white px-6 py-3 mt-8 rounded-md shadow-md hover:bg-blue-600" onClick={() => setIsPopupOpen(true)}>
           Refer Now
         </button>
+        {isPopupOpen && <PopupForm onClose={() => setIsPopupOpen(false)} />}
       </div>
     );
   }
