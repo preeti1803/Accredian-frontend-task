@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 
+const API_BASE_URL = "https://accredian-backend-task-1-24zd.onrender.com";
+
 const PopupForm = ({ onClose }) => {
   const [formData, setFormData] = useState({
     name: "",
@@ -12,6 +14,8 @@ const PopupForm = ({ onClose }) => {
   });
 
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
 
   // Function to validate email format
   const isValidEmail = (email) => {
@@ -25,8 +29,10 @@ const PopupForm = ({ onClose }) => {
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrors({});
+    setMessage("");
 
     let validationErrors = {};
     if (!isValidEmail(formData.email)) {
@@ -41,8 +47,34 @@ const PopupForm = ({ onClose }) => {
       return;
     }
 
-    alert("Referral Submitted Successfully!");
-    onClose();
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/referral`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        setMessage("Referral submitted successfully!");
+        setFormData({
+          name: "",
+          email: "",
+          friendName: "",
+          friendEmail: "",
+          referralCode: "",
+          courseId: "",
+          referralMessage: "",
+        });
+      } else {
+        setMessage(result.error || "Something went wrong!");
+      }
+    } catch (error) {
+      setMessage("Server error. Please try again.");
+      console.error("Error:", error);
+    }
+    setLoading(false);
   };
 
   return (
@@ -119,9 +151,12 @@ const PopupForm = ({ onClose }) => {
           <button
             type="submit"
             className="bg-blue-600 text-white px-4 py-2 rounded w-full hover:bg-blue-700"
+            disabled={loading}
           >
-            Submit
+            {loading ? "Submitting..." : "Submit"}
           </button>
+
+          {message && <p className="text-green-600 mt-2">{message}</p>}
         </form>
 
         {/* Close Button */}
